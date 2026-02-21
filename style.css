@@ -1,158 +1,181 @@
-*{
+:root {
+    --primary-color: #fff;
+    --accent-color: rgba(255, 255, 255, 0.8);
+    --bg-overlay: rgba(10, 15, 30, 0.3);
+}
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
+body {
     overflow: hidden;
     background-image: url("src/1.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 80vh;
+    height: 100vh;
+    width: 100vw;
+    background-color: #030613; /* Fallback night sky color */
+    font-family: 'Montserrat', sans-serif;
+    color: var(--primary-color);
 }
 
-@media all and (max-width: 1300px){
-    body{
-        height: 90vh;
-    }
-}
-
-@media all and (max-width: 1150px){
-    body{
-        height: 100vh;
-    }
-}
-
-span{
+/* --- OVERLAY & CONTENT --- */
+.content-overlay {
     position: absolute;
     top: 0;
-    left: 75%;
-    height: 6px;
-    width: 6px;
-    border-radius: 50%;
-    background-color: #fff;
-    box-shadow: 0 0 0 4px rgba(255,255,255,0.1),
-    0 0 0 8px rgba(255,255,255,0.1),
-    0 0 20px rgba(255,255,255,1);
-    animation: animate 2s linear infinite;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-overlay);
+    z-index: 10;
+    pointer-events: none; /* Let clicks pass through overlay area */
 }
 
-span::before{
+.movie-title {
+    font-family: 'Cinzel', serif;
+    font-size: 5rem;
+    font-weight: 600;
+    letter-spacing: 5px;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 255, 255, 0.3);
+    margin-bottom: 10px;
+    animation: fadeIn 2s ease-out forwards;
+    opacity: 0;
+}
+
+.subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 12px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 50px;
+    animation: fadeIn 2.5s ease-out 0.5s forwards;
+    opacity: 0;
+}
+
+/* --- AUDIO BUTTON --- */
+.audio-btn {
+    pointer-events: auto; /* Enable clicks for the button */
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    animation: fadeIn 3s ease-out 1s forwards;
+    opacity: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.audio-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+.audio-btn i {
+    transition: opacity 0.2s ease;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- DYNAMIC BACKGROUND STARS --- */
+#stars-container, #comets-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.star {
+    position: absolute;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #fff;
+    animation: twinkle linear infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* --- COMETS (SHOOTING STARS) --- */
+.comet {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0));
+    border-radius: 50%;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 1));
+    animation: shootingStar linear infinite;
+    opacity: 0;
+}
+
+.comet::before {
     content: '';
     position: absolute;
     top: 50%;
+    left: 0;
     transform: translateY(-50%);
-    width: 300px;
-    height: 2px;
-    background: linear-gradient(90deg,#fff,transparent);
-} 
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 0 15px 3px rgba(255, 255, 255, 1), 0 0 30px rgba(100, 200, 255, 0.8); /* Slight blue tint to the comet head */
+}
 
-@keyframes animate{
-    0%{
-        transform: rotate(-45deg) translateX(0px);
+@keyframes shootingStar {
+    0% {
+        transform: rotate(-45deg) translateX(0);
+        opacity: 0;
+    }
+    10% {
         opacity: 1;
     }
-    100%{
-        transform: rotate(-45deg) translateX(-700px);
+    80% {
+        opacity: 0;
+    }
+    100% {
+        transform: rotate(-45deg) translateX(-1500px);
         opacity: 0;
     }
 }
 
-span:nth-child(1){
-    top: 0;
-    left: 75%;
-    animation-duration: 4s;
+/* --- GENERAL ANIMATIONS --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-span:nth-child(2){
-    top: 0;
-    left: 50%;
-    animation-delay: 0.2s;
-    animation-duration: 3s;
-}
-
-span:nth-child(3){
-    top: 0;
-    left: 40%;
-    animation-delay: 0.4s;
-    animation-duration: 2s;
-}
-
-span:nth-child(4){
-    top: 0;
-    left: 90%;
-    animation-delay: 0.6s;
-    animation-duration: 1.5s;
-}
-
-span:nth-child(5){
-    top: 0;
-    left: 60%;
-    animation-delay: 0.8s;
-    animation-duration: 2.5s;
-}
-
-span:nth-child(6){
-    top: 25%;
-    left: 100%;
-    animation-delay: 1s;
-    animation-duration: 3s;
-}
-
-span:nth-child(7){
-    top: 0;
-    left: 25%;
-    animation-delay: 1.2s;
-    animation-duration: 2.75s;
-}
-
-span:nth-child(8){
-    top: 0;
-    left: 100%;
-    animation-delay: 1.4s;
-    animation-duration: 1.25s;
-}
-
-span:nth-child(9){
-    top: 0;
-    left: 75%;
-    animation-duration: 4s;
-}
-
-span:nth-child(10){
-    top: 0;
-    left: 75%;
-    animation-duration: 4s;
-}
-
-span:nth-child(11){
-    top: 0;
-    left: 75%;
-    animation-duration: 4s;
-}
-
-span:nth-child(12){
-    top: 0;
-    left: 75%;
-    animation-duration: 4s;
-}
-
-span:nth-child(13){
-    top: 0;
-    left: 75%;
-    animation-duration: 4s;
-}
-
-span:nth-child(14){
-    top: 0;
-    left: 75%;
-    animation-duration: 4s;
-}
-
-span:nth-child(15){
-    top: 0;
-    left: 75%;
-    animation-duration: 4s;
+/* --- RESPONSIVE DESIGN --- */
+@media screen and (max-width: 768px) {
+    .movie-title {
+        font-size: 3rem;
+        text-align: center;
+        padding: 0 20px;
+    }
+    .subtitle {
+        font-size: 1rem;
+        letter-spacing: 8px;
+    }
 }
